@@ -1,6 +1,6 @@
-import React, {useContext} from 'react';
-import {CssBaseline} from "@material-ui/core";
-import { ThemeProvider } from '@material-ui/core/styles';
+import React, {useContext, useEffect} from 'react';
+import {CssBaseline, useTheme} from "@material-ui/core";
+import {makeStyles, ThemeProvider} from '@material-ui/core/styles';
 import theme from "./theme";
 import {ScreenContext, useGetScreenDimension} from "./screen-context";
 import Main from "./pages/main";
@@ -18,16 +18,24 @@ const App: React.FC = () => {
   )
 };
 
-const InnerApp: React.FC = () => {
-  const screen = useContext(ScreenContext);
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: '100vw',
+    maxWidth: '100%',
+    margin: theme.spacing(10, 0)
+  },
+}));
 
-  // wait only screen dimension is retrieved.
-  if (screen === null) {
-    return <></>
-  }
+const InnerApp: React.FC = () => {
+  const classes = useStyles();
+  const theme = useTheme();
+
+  useEffect(() => {
+    document.body.style.backgroundColor = theme.palette.secondary.main;
+  }, [theme]);
 
   return (
-    <div>
+    <div className={classes.root}>
       <Main/>
     </div>
   );
