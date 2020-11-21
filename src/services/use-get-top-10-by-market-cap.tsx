@@ -1,22 +1,22 @@
-import useGet from "./use-get";
-import {useMemo} from "react";
+import useRequestState from "./use-request-state";
+import axios from "axios";
 
 interface Top10ByMarketCapResponse {
   Data: Item[]
 }
 
 interface Item {
-  CoinInfo?: {
-    Name?: string,
+  CoinInfo: {
+    Name: string,
   },
-  DISPLAY?: {
-    [key in Currency]?: {
-      TOSYMBOL?: string
+  DISPLAY: {
+    [key in Currency]: {
+      TOSYMBOL: string
     }
   },
-  RAW?: {
-    [key in Currency]?: {
-      PRICE?: number
+  RAW: {
+    [key in Currency]: {
+      PRICE: number
     }
   }
 }
@@ -34,31 +34,44 @@ const useGetTop10ByMarketCap = (currency: Currency) => {
 
   const {
     isLoading,
-    data: _data,
-    isError,
+    setIsLoading,
     errorMessage,
-    doGet
-  } = useGet<Top10ByMarketCapResponse>(url);
+    setErrorMessage,
+    data,
+    setData,
+    isError,
+    resetError,
+    setGenericErrorMessage
+  } = useRequestState<string[]>();
 
-  console.log(_data);
+  const doGet = async () => {
+    try {
+      setIsLoading(true);
+      resetError();
+      const data = await axios.get<Top10ByMarketCapResponse>(url);
+      const rawData = data.data;
 
-  // data is an array of string, string starts with coin name, end with coin price
-  const data: null | string[] = useMemo(() => {
-    if (_data === null) {
-      return null
-    } else {
-      const names = _data.Data.map(item => item?.CoinInfo?.Name === undefined ? 'unknown' : item?.CoinInfo?.Name);
-      const currencySymbols = _data.Data.map(item => item?.DISPLAY?.USD?.TOSYMBOL === undefined ? '' : item?.DISPLAY?.USD?.TOSYMBOL);
-      const prices = _data.Data.map(item => item?.RAW?.USD?.PRICE === undefined ? '0' : item?.RAW?.USD?.PRICE.toFixed(2));
-
-      return names.map((name, i) => {
+      // converting raw data to an array of string, string starts with coin name, end with coin price
+      const names = rawData.Data.map(item => item.CoinInfo.Name);
+      const currencySymbols = rawData.Data.map(item => item.DISPLAY[currency].TOSYMBOL);
+      const prices = rawData.Data.map(item => item.RAW[currency].PRICE.toFixed(2));
+      const textArray = names.map((name, i) => {
         // fill the text to 15 characters in the middle with space
         const short = Math.max(LETTER_LENGTH - name.length - prices[i].length - currencySymbols[i].length, 0);
-        console.log(short);
         return `${name}${new Array(short).fill(' ').join('')}${currencySymbols[i]}${prices[i]}`
-      })
+      });
+      setData(textArray);
+    } catch (e) {
+      const hasErrorMessage = e.data && e.data.message;
+      if (hasErrorMessage) {
+        setErrorMessage(e.data.message)
+      } else {
+        setGenericErrorMessage()
+      }
+    } finally {
+      setIsLoading(false)
     }
-  }, [_data]);
+  };
 
   return {
     isLoading,

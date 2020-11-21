@@ -1,19 +1,14 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {SetStateAction, useMemo, useState} from "react";
 import useMounted from "../helpers/use-mounted";
 import useGetTop10ByMarketCap, {Currency} from "../services/use-get-top-10-by-market-cap";
 import FlipRow from "../components/flip-row";
 import {makeStyles} from "@material-ui/core/styles";
 import { CircularProgress } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-
-const LOADING = 'loading...     ';
-const loadingArray = (() => {
-  const array = [];
-  for (let i=0; i<10; i++) {
-    array.push(LOADING)
-  }
-  return array;
-})();
+import CurrencySelector from "./currency-selector";
+import useRefreshDataAutomatically from "./use-refresh-data-automatically";
+import mockLoadingData from "./mock-loading-data";
+import useUpdateAfterDataRefreshed from "./use-update-after-data-refreshed";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,61 +31,51 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface PriceBoardProps {
-
+  currency: Currency,
+  setCurrency: React.Dispatch<SetStateAction<Currency>>,
+  isInfoShowed: boolean,
+  setIsInfoShowed: React.Dispatch<SetStateAction<boolean>>,
 }
 
-const PriceBoard: React.FC<PriceBoardProps> = () => {
+const PriceBoard: React.FC<PriceBoardProps> = ({currency, setCurrency, isInfoShowed, setIsInfoShowed}) => {
   const classes = useStyles();
-  const [isInfoShowed, setIsInfoShowed] = useState(true);
   const {
     isLoading,
-    data,
+    data: fetchedData,
     isError,
     errorMessage,
     doGet
-  } = useGetTop10ByMarketCap(Currency.USD);
+  } = useGetTop10ByMarketCap(currency);
+
+  const [frontData, setFrontData] = useState(mockLoadingData.slice());
+  const [backData, setBackData] = useState(mockLoadingData.slice());
 
   useMounted(() => {
     doGet()
   });
 
-  console.log(data);
-
-  const [isFront, setIsFront] = useState(false);
-  useEffect(() => {
-    if (data !== null) {
-      setTimeout(() => {
-        setIsFront(true)
-      })
-    }
-  }, [data]);
+  const isFront = useUpdateAfterDataRefreshed(fetchedData, setFrontData, setBackData);
+  const refreshingProgress = useRefreshDataAutomatically(fetchedData, doGet, 30000);
 
   const content = useMemo(() => {
-    if (isLoading) {
-      return (
-        <div>
-          {loadingArray.map((text, index) => {
-            return <FlipRow frontText={text} backText={text} isFront={false} key={index} row={index}/>
-          })}
-        </div>
-      )
-    } else if (!isLoading && data !== null) {
-      // loaded and has data
-      return (
-        <div>
-          {data.map((text, index) => {
-            return <FlipRow frontText={LOADING} backText={text} isFront={isFront} key={index} row={index}/>
-          })}
-        </div>
-      )
-    } else return <></>
-  }, [data, isFront, isLoading]);
+    return (
+      <div>
+        {frontData.map((text, index) => {
+          return <FlipRow frontText={text} backText={backData[index]} isFront={isFront} key={index} row={index}/>
+        })}
+      </div>
+    )
+  }, [backData, frontData, isFront]);
 
   return (
     <div className={classes.root}>
 
       {
         isLoading && <CircularProgress size={25} className={classes.spinner}/>
+      }
+
+      {
+        refreshingProgress !== null && <CircularProgress size={25} variant="static" className={classes.spinner} value={refreshingProgress}/>
       }
 
       {
@@ -108,6 +93,10 @@ const PriceBoard: React.FC<PriceBoardProps> = () => {
             className={classes.message}
             onClose={() => setIsInfoShowed(false)}
         >Coin price changes quickly, data is refreshed automatically every 30 seconds</Alert>
+      }
+
+      {
+        <CurrencySelector currency={currency} setCurrency={setCurrency}/>
       }
 
       { content }

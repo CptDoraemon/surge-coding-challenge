@@ -68,7 +68,7 @@ const FlipLetter: React.FC<FlipLetterProps> = ({front, back, isFront, row, colum
   return (
     <div className={classes.root}>
       <div
-        className={clsx(classes.wrapper, isFront && classes.active)}
+        className={clsx(classes.wrapper, !isFront && classes.active)}
         style={{
           transition: `transform 1000ms ${row*500 + column*100}ms`,
         }}
