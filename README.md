@@ -1,5 +1,7 @@
 # Surge coding challenge
 
+[Live Demo](https://cptdoraemon.github.io/surge-coding-challenge/)
+
 ## Node version
 v12.18.3
 
