@@ -27,10 +27,12 @@ export enum Currency {
   EUR='EUR'
 }
 
-const LETTER_LENGTH = 15;
+export const LETTER_LENGTH = 16;
 
 const useGetTop10ByMarketCap = (currency: Currency) => {
-  const url = `https://min-api.cryptocompare.com/data/top/mktcapfull?limit=10&tsym=${currency}`;
+  // I know it's bad practise to hard coding api_key, but there is no way to hide secret in frontend anyways
+  // Usually I'll let node server to proxy the API calls
+  const url = `https://min-api.cryptocompare.com/data/top/mktcapfull?limit=10&tsym=${currency}&api_key=4d646ccdea5094e1300c8846841310f384150830ecfa7ad715085f6da4320bab`;
 
   const {
     isLoading,
@@ -57,7 +59,8 @@ const useGetTop10ByMarketCap = (currency: Currency) => {
       const prices = rawData.Data.map(item => item.RAW[currency].PRICE.toFixed(2));
       const textArray = names.map((name, i) => {
         // fill the text to 15 characters in the middle with space
-        const short = Math.max(LETTER_LENGTH - name.length - prices[i].length - currencySymbols[i].length, 0);
+        const letterLength = Math.max(LETTER_LENGTH, name.length + prices[i].length + currencySymbols[i].length + 1);
+        const short = Math.max(letterLength - name.length - prices[i].length - currencySymbols[i].length, 0);
         return `${name}${new Array(short).fill(' ').join('')}${currencySymbols[i]}${prices[i]}`
       });
       setData(textArray);

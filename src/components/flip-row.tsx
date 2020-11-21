@@ -1,6 +1,7 @@
-import React, {useMemo} from "react";
+import React, {useContext, useEffect, useMemo, useRef, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import FlipLetter from "./flip-letter";
+import {ScreenContext} from "../screen-context";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -8,7 +9,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    margin: theme.spacing(2, 0)
   }
 }));
 
@@ -46,11 +46,16 @@ const FlipRow: React.FC<FlipRowProps> = ({frontText, backText, isFront, row}) =>
     return fillUpArrayToLength(backText.split(''), letterLength)
   }, [backText, letterLength]);
 
+  const screen = useContext(ScreenContext);
+  const letterSize = screen ?
+    Math.min(50, screen.mainContainerWidth / letterLength) :
+    0;
+
   return (
     <div className={classes.root}>
       {
         frontTextArray.map((letter, i) => (
-          <FlipLetter front={letter} back={backTextArray[i]} isFront={isFront} key={i} column={i} row={row}/>
+          <FlipLetter front={letter} back={backTextArray[i]} isFront={isFront} key={i} column={i} row={row} size={letterSize}/>
         ))
       }
     </div>
