@@ -13,7 +13,7 @@ It should open a new page automatically, in case it doesn't:
 http://localhost:3000/
 
 ## Known issues
-* Typescript and React Create App just released new versions with breaking ~~changes~~ bugs, the app may not start correctly
+Typescript and React Create App just released new versions with breaking ~~bugs~~ changes, the app may not start correctly
 if you wanna run it locally.  
 In case you meet error like:
 ```
