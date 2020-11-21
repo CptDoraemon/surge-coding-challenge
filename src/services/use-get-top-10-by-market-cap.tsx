@@ -51,7 +51,7 @@ const useGetTop10ByMarketCap = (currency: Currency) => {
       setIsLoading(true);
       resetError();
       const data = await axios.request<Top10ByMarketCapResponse>({
-        url: `${url}&a=${Math.round(Math.random()*10000)}`,
+        url: `${url}&a=${Date.now().toString(36)}`,
         method: 'get'
       });
       const rawData = data.data;
