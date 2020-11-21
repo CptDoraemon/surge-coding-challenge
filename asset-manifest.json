@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/surge-coding-challenge/static/css/main.4a6ed67d.chunk.css",
+    "main.js": "/surge-coding-challenge/static/js/main.5d922132.chunk.js",
+    "main.js.map": "/surge-coding-challenge/static/js/main.5d922132.chunk.js.map",
+    "runtime-main.js": "/surge-coding-challenge/static/js/runtime-main.ac24e5f6.js",
+    "runtime-main.js.map": "/surge-coding-challenge/static/js/runtime-main.ac24e5f6.js.map",
+    "static/js/2.c75a583d.chunk.js": "/surge-coding-challenge/static/js/2.c75a583d.chunk.js",
+    "static/js/2.c75a583d.chunk.js.map": "/surge-coding-challenge/static/js/2.c75a583d.chunk.js.map",
+    "static/js/3.c9121120.chunk.js": "/surge-coding-challenge/static/js/3.c9121120.chunk.js",
+    "static/js/3.c9121120.chunk.js.map": "/surge-coding-challenge/static/js/3.c9121120.chunk.js.map",
+    "index.html": "/surge-coding-challenge/index.html",
+    "static/css/main.4a6ed67d.chunk.css.map": "/surge-coding-challenge/static/css/main.4a6ed67d.chunk.css.map",
+    "static/js/2.c75a583d.chunk.js.LICENSE.txt": "/surge-coding-challenge/static/js/2.c75a583d.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.ac24e5f6.js",
+    "static/js/2.c75a583d.chunk.js",
+    "static/css/main.4a6ed67d.chunk.css",
+    "static/js/main.5d922132.chunk.js"
+  ]
+}
