@@ -96,7 +96,7 @@ const PriceBoard: React.FC<PriceBoardProps> = ({currency, setCurrency, isInfoSho
             severity="info"
             className={classes.message}
             onClose={() => setIsInfoShowed(false)}
-        >Coin price changes quickly, data is refreshed automatically every 30 seconds</Alert>
+        >Coin prices change quickly, data is refreshed automatically every 30 seconds</Alert>
       }
 
       <div className={classes.infoRow}>
