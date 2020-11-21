@@ -50,7 +50,10 @@ const useGetTop10ByMarketCap = (currency: Currency) => {
     try {
       setIsLoading(true);
       resetError();
-      const data = await axios.get<Top10ByMarketCapResponse>(url);
+      const data = await axios.request<Top10ByMarketCapResponse>({
+        url: `${url}&a=${Math.round(Math.random()*10000)}`,
+        method: 'get'
+      });
       const rawData = data.data;
 
       // converting raw data to an array of string, string starts with coin name, end with coin price
@@ -58,7 +61,8 @@ const useGetTop10ByMarketCap = (currency: Currency) => {
       const currencySymbols = rawData.Data.map(item => item.DISPLAY[currency].TOSYMBOL);
       const prices = rawData.Data.map(item => item.RAW[currency].PRICE.toFixed(2));
       const textArray = names.map((name, i) => {
-        // fill the text to 15 characters in the middle with space
+        // fill the text so that it's at least LETTER_LENGTH long
+        // In case the raw text is longer than LETTER_LENGTH, pad it with one extra white space
         const letterLength = Math.max(LETTER_LENGTH, name.length + prices[i].length + currencySymbols[i].length + 1);
         const short = Math.max(letterLength - name.length - prices[i].length - currencySymbols[i].length, 0);
         return `${name}${new Array(short).fill(' ').join('')}${currencySymbols[i]}${prices[i]}`

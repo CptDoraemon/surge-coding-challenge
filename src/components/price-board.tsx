@@ -35,8 +35,8 @@ const useStyles = makeStyles((theme) => ({
   },
   link: {
     color: theme.palette.secondary.contrastText,
-    margin: theme.spacing(1, 0),
-    width: '100%',
+    marginLeft: 'auto',
+    marginTop: theme.spacing(2),
     textAlign: 'right'
   }
 }));
