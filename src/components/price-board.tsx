@@ -22,12 +22,18 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     position: 'relative',
   },
-  spinner: {
-    color: theme.palette.secondary.contrastText,
+  spinnerContainer: {
     position: 'absolute',
     right: 0,
-    top: '50%',
-    zIndex: theme.zIndex.snackbar
+    height: '100%',
+    zIndex: theme.zIndex.snackbar,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  spinner: {
+    color: theme.palette.secondary.contrastText,
   },
   message: {
     width: '100%',
@@ -67,18 +73,6 @@ const PriceBoard: React.FC<PriceBoardProps> = ({currency, setCurrency, isInfoSho
     doGet()
   });
 
-  const spinnerStyle = {transform: 'translateY(-50%) rotate(-90deg)'};
-
-  const content = useMemo(() => {
-    return (
-      <>
-        {frontData.map((text, index) => {
-          return <FlipRow frontText={text} backText={backData[index]} isFront={isFront} key={index} row={index}/>
-        })}
-      </>
-    )
-  }, [backData, frontData, isFront]);
-
   return (
     <div className={classes.root}>
 
@@ -100,18 +94,23 @@ const PriceBoard: React.FC<PriceBoardProps> = ({currency, setCurrency, isInfoSho
       }
 
       <div className={classes.infoRow}>
-        {
-          isLoading && <CircularProgress size={25} className={classes.spinner} style={spinnerStyle}/>
-        }
-
-        {
-          refreshingProgress !== null && <CircularProgress size={25} variant="static" className={classes.spinner} value={refreshingProgress} style={spinnerStyle}/>
-        }
-
+        <div className={classes.spinnerContainer}>
+          {
+            isLoading && <CircularProgress size={25} className={classes.spinner}/>
+          }
+          {
+            refreshingProgress !== null && <CircularProgress size={25} variant="static" className={classes.spinner} value={refreshingProgress} />
+          }
+        </div>
         <CurrencySelector currency={currency} setCurrency={setCurrency}/>
       </div>
 
-      { content }
+      {
+        // content
+        frontData.map((text, index) => {
+          return <FlipRow frontText={text} backText={backData[index]} isFront={isFront} key={index} row={index}/>
+        })
+      }
 
       <Link href="https://min-api.cryptocompare.com/" target="_blank" rel="noopener" className={classes.link}>
         API 💪 By CryptoCompare

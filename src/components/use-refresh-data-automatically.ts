@@ -46,7 +46,7 @@ const useRefreshDataAutomatically = (data: null | any, getData: () => void, time
 
   return countDown === null ?
     null :
-    Math.round((countDown * 1000 / timerMs) * 100)
+    Math.round((1 - countDown * 1000 / timerMs) * 100)
 };
 
 export default useRefreshDataAutomatically
