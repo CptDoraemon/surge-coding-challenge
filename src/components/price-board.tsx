@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%'
   },
   infoRow: {
     width: '100%',
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
   message: {
     width: '100%',
-    margin: theme.spacing(2, 0)
+    margin: theme.spacing(0.5, 0)
   },
   link: {
     color: theme.palette.secondary.contrastText,

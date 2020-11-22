@@ -47,9 +47,7 @@ const FlipRow: React.FC<FlipRowProps> = ({frontText, backText, isFront, row}) =>
   }, [backText, letterLength]);
 
   const screen = useContext(ScreenContext);
-  const letterSize = screen ?
-    Math.min(50, screen.mainContainerWidth / letterLength) :
-    0;
+  const letterSize = screen ? screen.mainContainerWidth / letterLength : 0;
 
   return (
     <div className={classes.root}>

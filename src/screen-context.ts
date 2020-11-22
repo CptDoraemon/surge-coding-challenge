@@ -17,7 +17,7 @@ const useGetScreenDimension = () => {
     setScreen({
       width,
       height: window.innerHeight,
-      mainContainerWidth: Math.min(1000, width)
+      mainContainerWidth: Math.min(800, width * 0.92)
     })
   }, []);
 
